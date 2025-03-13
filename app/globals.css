@@ -1,0 +1,101 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    font-size: 16px; /* Decrease from 18px back to a more standard size */
+  }
+  
+  body {
+    background-color: white;
+    color: black;
+  }
+}
+
+.font-arabic {
+  direction: rtl;
+}
+
+/* Buttons with moderate size and black/white theme */
+.btn-primary {
+  @apply bg-black text-white px-4 py-2 rounded-md hover:bg-gray-800 transition-colors text-base font-medium;
+}
+
+.btn-secondary {
+  @apply bg-white text-black px-4 py-2 rounded-md border border-black hover:bg-gray-100 transition-colors text-base font-medium;
+}
+
+/* Custom theme classes - black and white */
+.bg-theme-primary {
+  @apply bg-black;
+}
+
+.bg-theme-secondary {
+  @apply bg-gray-100;
+}
+
+.bg-theme-dark {
+  @apply bg-black;
+}
+
+.text-theme-primary {
+  @apply text-black;
+}
+
+.text-theme-secondary {
+  @apply text-gray-800;
+}
+
+.border-theme-primary {
+  @apply border-black;
+}
+
+.hover-theme-primary:hover {
+  @apply bg-gray-800;
+}
+
+.hover-theme-secondary:hover {
+  @apply bg-gray-200;
+}
+
+/* Additional size classes for moderately sized UI */
+.text-larger {
+  font-size: 1.125rem;
+}
+
+.input-larger {
+  @apply text-base py-2 px-3;
+}
+
+.card-larger {
+  @apply p-4 rounded-md shadow-md;
+}
+
+.icon-larger {
+  @apply w-5 h-5;
+}
+
+/* Modal adjustments for moderately sized UI */
+.modal-content {
+  @apply p-6 rounded-md;
+  max-width: 85%;
+  width: 550px;
+}
+
+/* Flashcard styles */
+.perspective-1000 {
+  perspective: 1000px;
+}
+
+.transform-style-preserve-3d {
+  transform-style: preserve-3d;
+}
+
+.backface-hidden {
+  backface-visibility: hidden;
+}
+
+.rotate-y-180 {
+  transform: rotateY(180deg);
+}
