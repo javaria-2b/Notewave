@@ -7,13 +7,12 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div className="flex w-full min-h-screen">
-      <div className="flex-shrink-0 w-60">
-        <Sidebar />
-      </div>
-      <div className="flex-grow overflow-x-hidden">
+    <div className="flex flex-col md:flex-row w-full min-h-screen">
+      <Sidebar />
+      
+      <main className="flex-grow overflow-x-hidden w-full">
         {children}
-      </div>
+      </main>
     </div>
   );
 } 
