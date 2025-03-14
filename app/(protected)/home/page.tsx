@@ -11,11 +11,12 @@ import CreateFolderModal from '../../components/CreateFolderModal';
 import NoteEditor from '../../components/NoteEditor';
 import TranscriptionEditor from '../../components/TranscriptionEditor';
 import { NoteEnhancer } from '../../components/NoteEnhancer';
-import { Note as NoteType, getNotes, saveNote as saveNoteToStorage, deleteNote, getNotesByFolder, moveNoteToFolder } from '../../lib/noteStorage';
-import { Folder, getFolders, saveFolder, deleteFolder } from '../../lib/folderStorage';
+import { Note as NoteType } from '../../lib/noteStorage';
+import { Folder } from '../../lib/folderStorage';
 import MoveToFolderModal from '../../components/MoveToFolderModal';
 import PDFUploader from '../../components/PDFUploader';
 import YouTubeImporter from '../../components/YouTubeImporter';
+import { useStorage } from '../../lib/useStorage';
 
 // Mock data for initial notes if none exist
 const mockNotes = [
@@ -53,6 +54,16 @@ export default function HomePage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const folderParam = searchParams.get('folder');
+  const { 
+    isReady, 
+    getNotes, 
+    saveNote: saveNoteToStorage, 
+    deleteNote, 
+    getNotesByFolder, 
+    getFolders, 
+    saveFolder, 
+    deleteFolder 
+  } = useStorage();
   
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [showMoveToFolderModal, setShowMoveToFolderModal] = useState(false);
@@ -75,13 +86,15 @@ export default function HomePage() {
     content?: string;
   } | null>(null);
 
-  // Function to refresh notes from localStorage
-  const refreshNotes = () => {
+  // Function to refresh notes from storage
+  const refreshNotes = async () => {
+    if (!isReady) return;
+    
     let storedNotes;
     if (selectedFolder === 'all') {
-      storedNotes = getNotes();
+      storedNotes = await getNotes();
     } else {
-      storedNotes = getNotesByFolder(selectedFolder);
+      storedNotes = await getNotesByFolder(selectedFolder);
     }
     
     if (storedNotes.length === 0 && notes.length === 0 && selectedFolder === 'all') {
@@ -91,9 +104,11 @@ export default function HomePage() {
     }
   };
 
-  // Function to refresh folders from localStorage
-  const refreshFolders = () => {
-    const storedFolders = getFolders();
+  // Function to refresh folders from storage
+  const refreshFolders = async () => {
+    if (!isReady) return;
+    
+    const storedFolders = await getFolders();
     setFolders(storedFolders);
   };
 
@@ -106,22 +121,36 @@ export default function HomePage() {
     }
   }, [folderParam]);
 
-  // Load data on component mount
+  // Load data on component mount and when storage is ready
   useEffect(() => {
-    refreshFolders();
-    refreshNotes();
-  }, []);
+    if (isReady) {
+      refreshFolders();
+      refreshNotes();
+    }
+  }, [isReady]);
 
   // Refresh notes when selected folder changes
   useEffect(() => {
-    refreshNotes();
-  }, [selectedFolder]);
+    if (isReady) {
+      refreshNotes();
+    }
+  }, [selectedFolder, isReady]);
 
-  const handleMoveToFolder = (noteId: string, folderId?: string) => {
+  const handleMoveToFolder = async (noteId: string, folderId?: string) => {
+    if (!isReady) return;
+    
     if (folderId) {
       // If folderId is provided, move the note directly
-      moveNoteToFolder(noteId, folderId);
-      refreshNotes();
+      // First get the note
+      const allNotes = await getNotes();
+      const noteToMove = allNotes.find(note => note.id === noteId);
+      
+      if (noteToMove) {
+        // Update the note with the new folder ID
+        const updatedNote = { ...noteToMove, folderId };
+        await saveNoteToStorage(updatedNote);
+        refreshNotes();
+      }
     } else {
       // Otherwise, show the modal for selection
       setSelectedNoteForMove(noteId);
@@ -129,13 +158,15 @@ export default function HomePage() {
     }
   };
 
-  const handleSaveNote = (noteData: {
+  const handleSaveNote = async (noteData: {
     title: string;
     content: string;
     aiExplanation?: string;
     aiContext?: string;
     aiSummary?: string;
   }) => {
+    if (!isReady) return;
+    
     const newNote = {
       id: Date.now().toString(),
       title: noteData.title,
@@ -155,8 +186,8 @@ export default function HomePage() {
       folderId: selectedFolder === 'all' ? 'default' : selectedFolder
     };
     
-    // Save to localStorage and update state
-    saveNoteToStorage(newNote);
+    // Save to storage and update state
+    await saveNoteToStorage(newNote);
     refreshNotes();
     setShowNoteEditor(false);
     setShowTranscriptionEditor(false);
@@ -173,8 +204,10 @@ export default function HomePage() {
     setShowTranscriptionEditor(true);
   };
 
-  const handleDeleteNote = (id: string) => {
-    deleteNote(id);
+  const handleDeleteNote = async (id: string) => {
+    if (!isReady) return;
+    
+    await deleteNote(id);
     refreshNotes();
     
     // Show success notification
@@ -197,23 +230,27 @@ export default function HomePage() {
   };
 
   // Function to handle folder creation
-  const handleCreateFolder = (name: string) => {
+  const handleCreateFolder = async (name: string) => {
+    if (!isReady) return;
+    
     const newFolder: Folder = {
       id: `folder-${Date.now()}`,
       name: name,
       createdAt: new Date().toISOString()
     };
-    saveFolder(newFolder);
+    await saveFolder(newFolder);
     refreshFolders();
     setShowFolderModal(false);
   };
 
   // Function to handle folder update/rename
-  const handleUpdateFolder = (id: string, name: string) => {
+  const handleUpdateFolder = async (id: string, name: string) => {
+    if (!isReady) return;
+    
     const folder = folders.find(f => f.id === id);
     if (folder) {
       const updatedFolder = { ...folder, name };
-      saveFolder(updatedFolder);
+      await saveFolder(updatedFolder);
       refreshFolders();
       setShowFolderModal(false);
       setEditFolder(null);
@@ -221,7 +258,9 @@ export default function HomePage() {
   };
 
   // Function to handle PDF upload and note creation
-  const handleSaveFromPDF = (title: string, content: string) => {
+  const handleSaveFromPDF = async (title: string, content: string) => {
+    if (!isReady) return;
+    
     const newNote: Note = {
       id: `note-${Date.now()}`,
       title,
@@ -235,7 +274,7 @@ export default function HomePage() {
       folderId: selectedFolder === 'all' ? 'default' : selectedFolder
     };
     
-    saveNoteToStorage(newNote);
+    await saveNoteToStorage(newNote);
     refreshNotes();
     setShowPDFUploader(false);
     
@@ -435,8 +474,7 @@ export default function HomePage() {
             setSelectedNoteForMove(null);
           }}
           onSelect={(folderId) => {
-            moveNoteToFolder(selectedNoteForMove, folderId);
-            refreshNotes();
+            handleMoveToFolder(selectedNoteForMove, folderId);
             setShowMoveToFolderModal(false);
             setSelectedNoteForMove(null);
           }}

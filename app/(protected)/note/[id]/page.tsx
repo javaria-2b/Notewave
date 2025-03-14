@@ -3,10 +3,9 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { getNoteById, deleteNote, moveNoteToFolder } from '../../../lib/noteStorage';
+import { useStorage } from '../../../lib/useStorage';
 import { Tabs, TabsList, TabsTrigger, TabsContent } from '../../../components/ui/tabs';
 import { Button } from '../../../components/ui/button';
-import { getFolders } from '../../../lib/folderStorage';
 import MoveToFolderModal from '../../../components/MoveToFolderModal';
 import DeleteConfirmationModal from '../../../components/DeleteConfirmationModal';
 import { generateQuizQuestions, QuizQuestion, generateFlashcards, Flashcard } from '../../../lib/actions';
@@ -16,6 +15,7 @@ export default function NotePage() {
   const params = useParams();
   const router = useRouter();
   const id = params.id as string;
+  const { isReady, getNotes, deleteNote, saveNote, getFolders } = useStorage();
   const [note, setNote] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [showFolderModal, setShowFolderModal] = useState<boolean>(false);
@@ -40,30 +40,39 @@ export default function NotePage() {
   const [flashcardError, setFlashcardError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (id) {
-      const noteData = getNoteById(id);
-      if (noteData) {
-        setNote(noteData);
-      } else {
-        // Note not found, redirect to home
-        router.push('/home');
+    const loadNote = async () => {
+      if (isReady && id) {
+        const notes = await getNotes();
+        const noteData = notes.find(n => n.id === id);
+        
+        if (noteData) {
+          setNote(noteData);
+        } else {
+          // Note not found, redirect to home
+          router.push('/home');
+        }
+        setLoading(false);
+        
+        // Load folders
+        const folderData = await getFolders();
+        setFolders(folderData);
       }
-      setLoading(false);
-      
-      // Load folders
-      setFolders(getFolders());
-    }
-  }, [id, router]);
+    };
+    
+    loadNote();
+  }, [id, router, isReady, getNotes, getFolders]);
 
   const handleAddToFolder = () => {
     setShowFolderModal(true);
   };
 
-  const handleMoveToFolder = (folderId: string) => {
-    if (id) {
-      moveNoteToFolder(id, folderId);
+  const handleMoveToFolder = async (folderId: string) => {
+    if (id && note && isReady) {
+      // Update the note with the new folder ID
+      const updatedNote = { ...note, folderId };
+      await saveNote(updatedNote);
       // Update the note in state
-      setNote({ ...note, folderId });
+      setNote(updatedNote);
     }
   };
 
@@ -83,9 +92,9 @@ export default function NotePage() {
     setShowDeleteConfirm(true);
   };
 
-  const confirmDelete = () => {
-    if (id) {
-      deleteNote(id);
+  const confirmDelete = async () => {
+    if (id && isReady) {
+      await deleteNote(id);
       router.push('/home');
     }
   };

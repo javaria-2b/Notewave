@@ -4,9 +4,10 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter, usePathname } from 'next/navigation';
 import CreateFolderModal from './CreateFolderModal';
-import { Folder, getFolders, saveFolder, deleteFolder } from '../lib/folderStorage';
+import { Folder } from '../lib/folderStorage';
 import FolderManager from './FolderManager';
 import { UserButton } from '@stackframe/stack';
+import { useStorage } from '../lib/useStorage';
 
 // Custom icon component for the UserButton extra item
 const CustomIcon = () => (
@@ -29,52 +30,63 @@ const CustomIcon = () => (
 export default function Sidebar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { isReady, getFolders, saveFolder, deleteFolder } = useStorage();
   const [folders, setFolders] = useState<Folder[]>([]);
   const [showFolderModal, setShowFolderModal] = useState(false);
   const [selectedFolder, setSelectedFolder] = useState<string>('all');
   const [editFolder, setEditFolder] = useState<{id: string, name: string} | null>(null);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Function to refresh folders from localStorage
-  const refreshFolders = () => {
-    const storedFolders = getFolders();
+  // Function to refresh folders from storage
+  const refreshFolders = async () => {
+    if (!isReady) return;
+    
+    const storedFolders = await getFolders();
     setFolders(storedFolders);
   };
 
-  // Load data on component mount
+  // Load data on component mount and when storage is ready
   useEffect(() => {
-    refreshFolders();
-  }, []);
+    if (isReady) {
+      refreshFolders();
+    }
+  }, [isReady]);
 
   // Close mobile menu when route changes
   useEffect(() => {
     setIsMobileMenuOpen(false);
   }, [pathname]);
 
-  const handleCreateFolder = (name: string) => {
+  const handleCreateFolder = async (name: string) => {
+    if (!isReady) return;
+    
     const newFolder: Folder = {
       id: `folder-${Date.now()}`,
       name: name,
       createdAt: new Date().toISOString()
     };
-    saveFolder(newFolder);
+    await saveFolder(newFolder);
     refreshFolders();
   };
 
-  const handleUpdateFolder = (id: string, name: string) => {
+  const handleUpdateFolder = async (id: string, name: string) => {
+    if (!isReady) return;
+    
     const folder = folders.find(f => f.id === id);
     if (folder) {
       const updatedFolder: Folder = {
         ...folder,
         name: name
       };
-      saveFolder(updatedFolder);
+      await saveFolder(updatedFolder);
       refreshFolders();
     }
   };
 
-  const handleDeleteFolder = (id: string) => {
-    deleteFolder(id);
+  const handleDeleteFolder = async (id: string) => {
+    if (!isReady) return;
+    
+    await deleteFolder(id);
     refreshFolders();
     if (selectedFolder === id) {
       setSelectedFolder('all');

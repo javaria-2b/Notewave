@@ -6,7 +6,7 @@ import { Textarea } from "./ui/textarea"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs"
 import { enhanceNote } from "../lib/actions"
-import { saveNote } from "../lib/noteStorage"
+import { useStorage } from "../lib/useStorage"
 import { Input } from "./ui/input"
 
 type EnhancedNote = {
@@ -33,6 +33,7 @@ export function NoteEnhancer({ onSave }: NoteEnhancerProps) {
   const [activeTab, setActiveTab] = useState("write")
   const [error, setError] = useState<string | null>(null)
   const [isSaved, setIsSaved] = useState(false)
+  const { saveNote, isReady } = useStorage()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -61,38 +62,47 @@ export function NoteEnhancer({ onSave }: NoteEnhancerProps) {
     }
   }
 
-  const handleSaveNote = () => {
-    if (enhancedNote) {
-      // If external onSave function is provided, use that
-      if (onSave) {
-        onSave({
-          title: noteTitle,
-          content: note,
-          aiExplanation: enhancedNote.explanation,
-          aiContext: enhancedNote.context,
-          aiSummary: enhancedNote.summary,
-        })
-        return
-      }
-      
-      // Otherwise, use the internal save function
-      const newNote = {
-        id: Date.now().toString(),
-        title: noteTitle || "AI Enhanced Note",
-        description: note.substring(0, 100) + (note.length > 100 ? "..." : ""),
-        date: new Date().toLocaleString(),
+  const handleSaveNote = async () => {
+    if (!isReady || !enhancedNote) return;
+    
+    // If external onSave function is provided, use that
+    if (onSave) {
+      onSave({
+        title: noteTitle,
         content: note,
         aiExplanation: enhancedNote.explanation,
         aiContext: enhancedNote.context,
         aiSummary: enhancedNote.summary,
-      }
-      
-      saveNote(newNote)
-      // Reset form
-      setNote("")
-      setNoteTitle("")
-      setEnhancedNote(null)
-      setActiveTab("write")
+      })
+      return
+    }
+    
+    // Otherwise, use the internal save function
+    const newNote = {
+      id: Date.now().toString(),
+      title: noteTitle || "AI Enhanced Note",
+      description: note.substring(0, 100) + (note.length > 100 ? "..." : ""),
+      date: new Date().toLocaleString(),
+      content: note,
+      aiExplanation: enhancedNote.explanation,
+      aiContext: enhancedNote.context,
+      aiSummary: enhancedNote.summary,
+    }
+    
+    try {
+      await saveNote(newNote)
+      setIsSaved(true)
+      // Reset form after a delay
+      setTimeout(() => {
+        setNote("")
+        setNoteTitle("")
+        setEnhancedNote(null)
+        setActiveTab("write")
+        setIsSaved(false)
+      }, 2000)
+    } catch (err) {
+      setError("Failed to save note. Please try again.")
+      console.error(err)
     }
   }
 

@@ -9,21 +9,21 @@ import { openai } from "@ai-sdk/openai"
 export async function enhanceNote(note: string) {
   // Generate explanation
   const { text: explanation } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Provide a detailed explanation of the following note, clarifying any concepts mentioned: "${note}"`,
     system: "You are a helpful assistant that provides clear, detailed explanations of concepts.",
   })
 
   // Generate context
   const { text: context } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Provide additional context and background information for the following note: "${note}"`,
     system: "You are a knowledgeable assistant that provides relevant context and background information.",
   })
 
   // Generate summary
   const { text: summary } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Summarize the following note in a concise manner: "${note}"`,
     system: "You are a concise assistant that creates clear, brief summaries.",
   })
@@ -48,7 +48,7 @@ export interface Flashcard {
 
 export async function generateQuizQuestions(noteContent: string) {
   const { text } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Generate 5 multiple-choice quiz questions based on the following note content. Each question should have 4 options with exactly one correct answer. Format the response as a JSON array of objects, where each object has 'question', 'options' (array of strings), and 'correctAnswer' (string matching one of the options) properties: "${noteContent}"`,
     system: "You are an educational assistant that creates relevant quiz questions to test understanding of content. Return only valid JSON without any additional text.",
   });
@@ -67,7 +67,7 @@ export async function generateQuizQuestions(noteContent: string) {
 
 export async function generateFlashcards(noteContent: string) {
   const { text } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Generate 10 flashcards based on the following note content. Each flashcard should have a front side with a question or key term, and a back side with the answer or definition. Format the response as a JSON array of objects, where each object has 'front' and 'back' properties: "${noteContent}"`,
     system: "You are an educational assistant that creates effective flashcards to help with memorization. Return only valid JSON without any additional text.",
   });
@@ -92,7 +92,7 @@ export interface MindMapNode {
 
 export async function generateMindMap(noteContent: string) {
   const { text } = await generateText({
-    model: openai("gpt-4o"),
+    model: openai("gpt-4o-mini"),
     prompt: `Create a mind map based on the following note content. The mind map should have a central concept with 3-5 main branches, and each branch should have 2-4 sub-concepts. Format the response as a JSON object with 'id', 'label', and 'children' properties. Each child should also have 'id', 'label', and optionally 'children' properties: "${noteContent}"`,
     system: "You are a visual learning assistant that creates structured mind maps to organize concepts. Return only valid JSON without any additional text.",
   });
@@ -169,7 +169,7 @@ export async function extractTextFromPDF(formData: FormData) {
     
     // Generate realistic content based on the file name using AI
     const { text: extractedText } = await generateText({
-      model: openai("gpt-4o"),
+      model: openai("gpt-4o-mini"),
       prompt: `Generate realistic content that might be found in a PDF document titled "${cleanFileName}". Create about 3-5 paragraphs of text that would be typical for such a document. Make it detailed and informative, as if it were actually extracted from a real PDF.`,
       system: "You are a PDF text extraction tool that generates realistic content based on document titles.",
     });
@@ -309,7 +309,7 @@ export async function generateYouTubeNotes(videoId: string) {
     if (transcript && transcript.length > 100) {
       // Generate notes based on the actual transcript
       const { text: generatedContent } = await generateText({
-        model: openai("gpt-4o"),
+        model: openai("gpt-4o-mini"),
         prompt: `Create comprehensive notes based on this YouTube video transcript:
         
         Video: "${videoTitle}" by ${videoAuthor}
@@ -337,7 +337,7 @@ export async function generateYouTubeNotes(videoId: string) {
     } else {
       // Fall back to generating notes based on metadata
       const { text: generatedContent } = await generateText({
-        model: openai("gpt-4o"),
+        model: openai("gpt-4o-mini"),
         prompt: `Generate comprehensive notes for a YouTube video with the following details:
         
         Video ID: ${videoId}
