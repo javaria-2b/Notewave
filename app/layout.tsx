@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "NoteWave App Clone",
-  description: "NoteWave creates notes, mind maps, quizzes, and flashcards from audio, PDFs, and more.",
+  title: "Note0",
+  description: "Note0 creates notes, mind maps, quizzes, and flashcards from audio, PDFs, and more.",
 };
 
 export default function RootLayout({

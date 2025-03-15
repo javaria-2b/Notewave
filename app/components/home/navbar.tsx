@@ -14,7 +14,7 @@ export default function Navbar() {
     >
       <Link href="/" className="flex items-center space-x-2">
         <WaveformIcon className="w-8 h-8 text-blue-500" />
-        <span className="text-white font-medium text-xl">NoteWave AI</span>
+        <span className="text-white font-medium text-xl">Note0</span>
       </Link>
 
       <motion.div

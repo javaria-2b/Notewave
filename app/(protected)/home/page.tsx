@@ -22,7 +22,7 @@ import { useStorage } from '../../lib/useStorage';
 const mockNotes = [
   {
     id: '1',
-    title: 'Welcome to NoteWave: Your Study and Work Companion',
+    title: 'Welcome to Note0: Your Study and Work Companion',
     description: 'A powerful tool for transforming recordings and PDFs into organized notes using advanced AI techniques.',
     date: '09 Nov 2024, 11:08 PM',
     folderId: 'default'

@@ -8,6 +8,7 @@ import { Folder } from '../lib/folderStorage';
 import FolderManager from './FolderManager';
 import { UserButton } from '@stackframe/stack';
 import { useStorage } from '../lib/useStorage';
+import { AudioWaveformIcon } from 'lucide-react';
 
 // Custom icon component for the UserButton extra item
 const CustomIcon = () => (
@@ -140,25 +141,10 @@ export default function Sidebar() {
 
       <aside className={`fixed md:static w-60 h-screen border-r border-gray-300 flex flex-col bg-white transition-all duration-300 ease-in-out ${isMobileMenuOpen ? 'left-0' : '-left-60'} md:left-0 z-40`}>
         <div className="p-4 border-b border-gray-300 text-black flex justify-between items-center">
-          <Link href="/home" className="flex items-center gap-2">
-            <div className="text-xl font-bold flex items-center gap-2">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                className="h-6 w-6"
-              >
-                <circle cx="12" cy="12" r="10" />
-                <circle cx="12" cy="10" r="3" />
-                <path d="M7 16.3c0-1 1-2 2.5-2.5C10.5 13.3 11.3 13 12 13s1.5.3 2.5.8c1.5.5 2.5 1.5 2.5 2.5" />
-              </svg>
-              NoteWave
-            </div>
-          </Link>
+        <Link href="/" className="flex items-center space-x-2">
+        <AudioWaveformIcon className="w-8 h-8 text-blue-500" />
+        <span className="text-black font-medium text-xl">Note0</span>
+      </Link>
         </div>
 
         <div className="p-3 flex-1 overflow-y-auto">

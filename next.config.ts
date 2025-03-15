@@ -1,7 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    domains: ['notewave.app'],
+    domains: ['Note0.app'],
   },
   reactStrictMode: true,
 }

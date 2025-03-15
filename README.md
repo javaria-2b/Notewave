@@ -1,13 +1,13 @@
-# NoteWave AI ✨
+# Note0 AI ✨
 
 > **Transform your thoughts into organized brilliance with AI-powered note-taking**
 
-![NoteWave AI](https://img.shields.io/badge/NoteWave-AI%20Powered-blue)
+![Note0 AI](https://img.shields.io/badge/Note0-AI%20Powered-blue)
 ![Next.js](https://img.shields.io/badge/Next.js-15.2.1-black)
 ![React](https://img.shields.io/badge/React-19.0.0-61DAFB)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6)
 
-NoteWave AI is a revolutionary note-taking application that harnesses the power of artificial intelligence to transform how you capture, organize, and enhance your ideas. Whether you're a student, professional, or creative thinker, NoteWave AI adapts to your workflow and elevates your note-taking experience.
+Note0 AI is a revolutionary note-taking application that harnesses the power of artificial intelligence to transform how you capture, organize, and enhance your ideas. Whether you're a student, professional, or creative thinker, Note0 AI adapts to your workflow and elevates your note-taking experience.
 
 ## Why Start Using it?
 - Record and Take Notes with AI
@@ -48,7 +48,7 @@ NoteWave AI is a revolutionary note-taking application that harnesses the power 
 ### 🌙 Beautiful Experience
 - **Dark & Light Themes**: Choose the visual experience that suits your style
 - **Responsive Design**: Perfect experience on any device
-- **Customizable Interface**: Make NoteWave yours with personalization options
+- **Customizable Interface**: Make Note0 yours with personalization options
 
 ## 🚀 Getting Started
 
@@ -58,7 +58,7 @@ NoteWave AI is a revolutionary note-taking application that harnesses the power 
 
 ### Quick Start for Users
 
-1. Visit [NoteWave AI](https://notewave-ai.vercel.app) (replace with your actual URL)
+1. Visit [Note0 AI](https://Note0-ai.vercel.app) (replace with your actual URL)
 2. Create an account or sign in
 3. Start creating AI-enhanced notes!
 
@@ -68,7 +68,7 @@ NoteWave AI is a revolutionary note-taking application that harnesses the power 
 
 ```bash
 git clone <repository-url>
-cd notewave-ai
+cd Note0-ai
 ```
 
 2. Install dependencies:
@@ -105,7 +105,7 @@ pnpm dev
 
 ## 🧩 How It Works
 
-NoteWave AI combines cutting-edge technologies to deliver a seamless note-taking experience:
+Note0 AI combines cutting-edge technologies to deliver a seamless note-taking experience:
 
 1. **Create Notes**: Type, record audio, or import content from various sources
 2. **AI Processing**: Our AI analyzes your content for key insights and organization
@@ -127,4 +127,4 @@ NoteWave AI combines cutting-edge technologies to deliver a seamless note-taking
 
 ---
 
-<p align="center">Made with ❤️ by the NoteWave AI Team</p>
+<p align="center">Made with ❤️ by the Note0 AI Team</p>

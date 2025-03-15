@@ -11,7 +11,7 @@ export default function Footer() {
           <div className="md:col-span-1">
             <Link href="/" className="flex items-center space-x-2">
               <WaveformIcon className="w-8 h-8 text-blue-500" />
-              <span className="text-white font-medium text-xl">NoteWave AI</span>
+              <span className="text-white font-medium text-xl">Note0 AI</span>
             </Link>
             <p className="text-gray-400 mt-4">
               Transform your thoughts into organized brilliance with AI-powered note-taking.
@@ -84,12 +84,12 @@ export default function Footer() {
                 </Link>
               </li>
               <li>
-                <Link href="/privacy" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/privacy-policy" className="text-gray-400 hover:text-white transition-colors">
                   Privacy Policy
                 </Link>
               </li>
               <li>
-                <Link href="/terms" className="text-gray-400 hover:text-white transition-colors">
+                <Link href="/terms-and-conditions" className="text-gray-400 hover:text-white transition-colors">
                   Terms of Service
                 </Link>
               </li>
@@ -98,7 +98,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} NoteWave AI. All rights reserved.</p>
+          <p className="text-gray-400 text-sm">© {new Date().getFullYear()} Note0 AI. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
             <Link href="#" className="text-gray-400 hover:text-white transition-colors">
               Twitter

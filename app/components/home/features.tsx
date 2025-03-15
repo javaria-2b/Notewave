@@ -58,7 +58,7 @@ export default function Features() {
             viewport={{ once: true }}
             className="text-gray-400 max-w-2xl mx-auto"
           >
-            NoteWave AI adapts to your workflow with powerful features designed to enhance your note-taking experience.
+            Note0 AI adapts to your workflow with powerful features designed to enhance your note-taking experience.
           </motion.p>
         </div>
 

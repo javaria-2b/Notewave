@@ -8,14 +8,14 @@ export default function Testimonials() {
   const testimonials = [
     {
       quote:
-        "NoteWave AI has completely transformed how I take notes in my medical studies. The AI summaries and organization features save me hours every week.",
+        "Note0 AI has completely transformed how I take notes in my medical studies. The AI summaries and organization features save me hours every week.",
       name: "Dr. Sarah Johnson",
       role: "Medical Student",
       avatar: "/placeholder.svg?height=40&width=40",
     },
     {
       quote:
-        "As a researcher, I need to organize complex information. NoteWave's AI helps me connect ideas across different papers and generate insights I might have missed.",
+        "As a researcher, I need to organize complex information. Note0's AI helps me connect ideas across different papers and generate insights I might have missed.",
       name: "Prof. Michael Chen",
       role: "Research Scientist",
       avatar: "/placeholder.svg?height=40&width=40",
