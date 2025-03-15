@@ -158,6 +158,18 @@ export default function NotePage() {
     setQuizCompleted(false);
   };
 
+  const handleShuffleQuestions = () => {
+    // Create a shuffled copy of the questions
+    const shuffled = [...quizQuestions].sort(() => Math.random() - 0.5);
+    setQuizQuestions(shuffled);
+    // Reset the quiz state
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setIsAnswerSubmitted(false);
+    setQuizScore(0);
+    setQuizCompleted(false);
+  };
+
   const handleGenerateFlashcards = async () => {
     const noteContent = note.content || note.description;
     if (!noteContent.trim()) {
@@ -366,82 +378,159 @@ export default function NotePage() {
                   </Button>
                 </>
               ) : quizCompleted ? (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Quiz Completed!</CardTitle>
-                    <CardDescription>
-                      You scored {quizScore} out of {quizQuestions.length} questions correctly.
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent className="flex flex-col items-center">
-                    <div className="text-6xl font-bold mb-4">
-                      {Math.round((quizScore / quizQuestions.length) * 100)}%
-                    </div>
+                <div className="max-w-xl mx-auto">
+                  <div className="mb-4 flex justify-between items-center">
+                    <h2 className="text-xl font-semibold">Quiz for</h2>
                     <div className="flex gap-4">
-                      <Button onClick={handleRestartQuiz} className="bg-black hover:bg-gray-800">
-                        Restart Quiz
+                      <button 
+                        onClick={() => setQuizQuestions([])} 
+                        className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Reset
+                      </button>
+                      <button 
+                        onClick={handleShuffleQuestions}
+                        className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                        </svg>
+                        Shuffle questions
+                      </button>
+                    </div>
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-4">{note.title}</h3>
+                  
+                  {/* Progress bar - full green for completed quiz */}
+                  <div className="w-full h-2 bg-gray-200 rounded-full mb-8">
+                    <div className="h-full bg-green-500 rounded-full w-full"></div>
+                  </div>
+                  
+                  <div className="text-center py-8">
+                    <h4 className="text-xl font-semibold mb-6">Quiz Completed!</h4>
+                    <p className="text-lg mb-8">You scored {quizScore} out of {quizQuestions.length} questions correctly.</p>
+                    
+                    <div className="flex justify-center gap-4">
+                      <Button 
+                        onClick={handleRestartQuiz} 
+                        className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-black px-4 py-2 rounded-md"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Do again
                       </Button>
-                      <Button onClick={() => setQuizQuestions([])} className="bg-gray-200 text-gray-800 hover:bg-gray-300">
-                        Close
+                      <Button 
+                        onClick={handleShuffleQuestions} 
+                        className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 text-black px-4 py-2 rounded-md"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                        </svg>
+                        Shuffle questions
                       </Button>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </div>
               ) : (
-                <Card>
-                  <CardHeader>
-                    <CardTitle>Question {currentQuestionIndex + 1} of {quizQuestions.length}</CardTitle>
-                    <CardDescription>
-                      Select the correct answer
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="mb-6">
-                      <h3 className="text-lg font-medium mb-4">{quizQuestions[currentQuestionIndex].question}</h3>
-                      <div className="space-y-2">
-                        {quizQuestions[currentQuestionIndex].options.map((option, index) => (
-                          <div 
-                            key={index}
-                            onClick={() => handleAnswerSelect(option)}
-                            className={`p-3 border rounded-md cursor-pointer transition-colors ${
-                              selectedAnswer === option 
-                                ? isAnswerSubmitted 
-                                  ? option === quizQuestions[currentQuestionIndex].correctAnswer
-                                    ? 'bg-green-100 border-green-500'
-                                    : 'bg-red-100 border-red-500'
-                                  : 'bg-blue-100 border-blue-500'
-                                : 'hover:bg-gray-50'
-                            }`}
-                          >
-                            {option}
-                            {isAnswerSubmitted && option === quizQuestions[currentQuestionIndex].correctAnswer && (
-                              <span className="ml-2 text-green-600">✓</span>
-                            )}
-                          </div>
-                        ))}
-                      </div>
+                <div className="max-w-xl mx-auto">
+                  <div className="mb-4 flex justify-between items-center">
+                    <h2 className="text-xl font-semibold">Quiz for</h2>
+                    <div className="flex gap-4">
+                      <button 
+                        onClick={() => setQuizQuestions([])} 
+                        className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99" />
+                        </svg>
+                        Reset
+                      </button>
+                      <button 
+                        onClick={handleShuffleQuestions}
+                        className="flex items-center text-sm text-gray-600 hover:text-gray-900"
+                      >
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4 mr-1">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M19.5 12c0-1.232-.046-2.453-.138-3.662a4.006 4.006 0 00-3.7-3.7 48.678 48.678 0 00-7.324 0 4.006 4.006 0 00-3.7 3.7c-.017.22-.032.441-.046.662M19.5 12l3-3m-3 3l-3-3m-12 3c0 1.232.046 2.453.138 3.662a4.006 4.006 0 003.7 3.7 48.656 48.656 0 007.324 0 4.006 4.006 0 003.7-3.7c.017-.22.032-.441.046-.662M4.5 12l3 3m-3-3l-3 3" />
+                        </svg>
+                        Shuffle questions
+                      </button>
                     </div>
-
-                    <div className="flex justify-center">
-                      {!isAnswerSubmitted ? (
-                        <Button 
-                          onClick={handleSubmitAnswer} 
-                          disabled={!selectedAnswer}
-                          className="bg-black hover:bg-gray-800"
-                        >
-                          Submit Answer
-                        </Button>
-                      ) : (
-                        <Button 
-                          onClick={handleNextQuestion}
-                          className="bg-black hover:bg-gray-800"
-                        >
-                          {currentQuestionIndex < quizQuestions.length - 1 ? 'Next Question' : 'See Results'}
-                        </Button>
-                      )}
+                  </div>
+                  
+                  <h3 className="text-2xl font-bold mb-4">{note.title}</h3>
+                  
+                  {/* Progress bar */}
+                  <div className="w-full h-2 bg-gray-200 rounded-full mb-8">
+                    <div 
+                      className="h-full bg-purple-500 rounded-full" 
+                      style={{ width: `${((currentQuestionIndex) / quizQuestions.length) * 100}%` }}
+                    ></div>
+                  </div>
+                  
+                  <div className="mb-8">
+                    <div className="text-left mb-2 text-gray-600">
+                      Question {currentQuestionIndex + 1} of {quizQuestions.length}
                     </div>
-                  </CardContent>
-                </Card>
+                    
+                    <h4 className="text-xl font-semibold text-left mb-6">
+                      {quizQuestions[currentQuestionIndex].question}
+                    </h4>
+                    
+                    <div className="space-y-3">
+                      {quizQuestions[currentQuestionIndex].options.map((option, index) => (
+                        <div 
+                          key={index}
+                          onClick={() => handleAnswerSelect(option)}
+                          className={`p-4 border rounded-md cursor-pointer transition-colors text-left ${
+                            selectedAnswer === option 
+                              ? isAnswerSubmitted 
+                                ? option === quizQuestions[currentQuestionIndex].correctAnswer
+                                  ? 'bg-green-50 border-green-500'
+                                  : 'bg-red-50 border-red-500'
+                                : 'border-purple-500'
+                              : 'hover:bg-gray-50'
+                          }`}
+                        >
+                          {option}
+                          {isAnswerSubmitted && (
+                            option === quizQuestions[currentQuestionIndex].correctAnswer 
+                              ? <span className="float-right text-green-600">✓</span>
+                              : selectedAnswer === option 
+                                ? <span className="float-right text-red-600">✗</span>
+                                : null
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                  
+                  <div className="flex justify-end">
+                    {!isAnswerSubmitted ? (
+                      <Button 
+                        onClick={handleSubmitAnswer} 
+                        disabled={!selectedAnswer}
+                        className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+                      >
+                        Submit
+                      </Button>
+                    ) : (
+                      <Button 
+                        onClick={handleNextQuestion}
+                        className="flex items-center gap-1 bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800 transition-colors"
+                      >
+                        {currentQuestionIndex < quizQuestions.length - 1 ? 'Next' : 'See Results'}
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-4 h-4">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+                        </svg>
+                      </Button>
+                    )}
+                  </div>
+                </div>
               )}
             </TabsContent>
 
@@ -479,7 +568,7 @@ export default function NotePage() {
                   
                   {/* Flashcard */}
                   <div 
-                    className="w-full max-w-md h-64 mb-6 perspective-1000 cursor-pointer"
+                    className="w-full max-w-2xl h-64 mb-6 perspective-1000 cursor-pointer"
                     onClick={handleFlipFlashcard}
                   >
                     <div className={`relative w-full h-full transition-transform duration-500 transform-style-preserve-3d ${isFlashcardFlipped ? 'rotate-y-180' : ''}`}>
@@ -498,7 +587,7 @@ export default function NotePage() {
                   <p className="text-gray-500 mb-6">Click the card to flip it</p>
                   
                   {/* Navigation buttons */}
-                  <div className="flex gap-4">
+                  <div className="flex justify-between w-full max-w-2xl">
                     <Button 
                       onClick={handlePreviousFlashcard}
                       className="bg-gray-200 text-gray-800 hover:bg-gray-300"
@@ -507,15 +596,9 @@ export default function NotePage() {
                     </Button>
                     <Button 
                       onClick={handleNextFlashcard}
-                      className="bg-black hover:bg-gray-800"
-                    >
-                      Next
-                    </Button>
-                    <Button 
-                      onClick={() => setFlashcards([])}
                       className="bg-gray-200 text-gray-800 hover:bg-gray-300"
                     >
-                      Close
+                      Next
                     </Button>
                   </div>
                 </div>
